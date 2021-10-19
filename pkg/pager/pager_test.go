@@ -1,6 +1,7 @@
 package pager
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,11 +26,13 @@ func TestPager(t *testing.T) {
 
 type inMemoryRepo struct {
 	issueTypes map[string]string
+	issues     map[string]string
 }
 
 func newMemoryRepo() repository.Repository {
 	return &inMemoryRepo{
 		issueTypes: make(map[string]string),
+		issues:     make(map[string]string),
 	}
 }
 
@@ -39,5 +42,18 @@ func (r *inMemoryRepo) UpsertIssueType(typeName string, template string) error {
 }
 
 func (r *inMemoryRepo) FindIssueType(typeName string) (string, bool) {
-	return "", false
+	template, ok := r.issueTypes[typeName]
+
+	return template, ok
+}
+
+func (r *inMemoryRepo) InsertIssue(id string, body string) error {
+	_, ok := r.issues[id]
+
+	if ok {
+		return fmt.Errorf("duplicated issue id = %s", id)
+	}
+
+	r.issues[id] = body
+	return nil
 }
