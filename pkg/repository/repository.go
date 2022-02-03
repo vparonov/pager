@@ -6,4 +6,5 @@ type Repository interface {
 	FindIssueType(typeName string) (string, bool)
 
 	InsertIssue(id string, body string) error
+	
 }
