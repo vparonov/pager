@@ -9,5 +9,5 @@ type Repository interface {
 	UpsertIssueType(typeName string, template string) error
 	FindIssueType(typeName string) (string, bool)
 
-	InsertIssue(issue entities.Issue) error
+	InsertIssue(issue *entities.Issue) error
 }

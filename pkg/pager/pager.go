@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/vparonov/pager/pkg/entities"
 	"github.com/vparonov/pager/pkg/repository"
 )
 
@@ -36,7 +37,10 @@ func (p *pager) CreateIssue(typeName string, placeHolderValues map[string]string
 
 	body := replacePlaceholders(template, placeHolderValues)
 
-	err := p.repository.InsertIssue(id, body)
+	err := p.repository.InsertIssue(&entities.Issue{
+		ID:   id,
+		Body: body,
+	})
 
 	if err != nil {
 		return "", err

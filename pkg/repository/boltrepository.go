@@ -47,7 +47,7 @@ func (r *boltRepository) UpsertIssueType(typeName string, template string) error
 }
 
 func (r *boltRepository) FindIssueType(typeName string) (string, bool) {
-	var template []byte
+	var template string
 	err := r.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte("template"))
 
@@ -55,7 +55,9 @@ func (r *boltRepository) FindIssueType(typeName string) (string, bool) {
 			return errors.New("bucket 'template' not found")
 		}
 
-		template = bucket.Get([]byte(typeName))
+		// nil byte slice converts to empty string
+		// so there is no need to check for nil here
+		template = string(bucket.Get([]byte(typeName)))
 		return nil
 	})
 
@@ -63,14 +65,10 @@ func (r *boltRepository) FindIssueType(typeName string) (string, bool) {
 		return "", false
 	}
 
-	if template == nil {
-		return "", false
-	}
-
-	return string(template), true
+	return template, true
 }
 
-func (r *boltRepository) InsertIssue(issue entities.Issue) error {
+func (r *boltRepository) InsertIssue(issue *entities.Issue) error {
 	return r.db.Update(func(tx *bolt.Tx) error {
 
 		bucket, err := tx.CreateBucketIfNotExists([]byte("issue"))

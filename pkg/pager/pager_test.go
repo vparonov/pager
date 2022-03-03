@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/vparonov/pager/pkg/entities"
 	"github.com/vparonov/pager/pkg/repository"
 )
 
@@ -55,13 +56,13 @@ func (r *inMemoryRepo) FindIssueType(typeName string) (string, bool) {
 	return template, ok
 }
 
-func (r *inMemoryRepo) InsertIssue(id string, body string) error {
-	_, ok := r.issues[id]
+func (r *inMemoryRepo) InsertIssue(issue *entities.Issue) error {
+	_, ok := r.issues[issue.ID]
 
 	if ok {
-		return fmt.Errorf("duplicated issue id = %s", id)
+		return fmt.Errorf("duplicated issue id = %s", issue.ID)
 	}
 
-	r.issues[id] = body
+	r.issues[issue.ID] = issue.Body
 	return nil
 }
