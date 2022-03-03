@@ -36,6 +36,14 @@ func newMemoryRepo() repository.Repository {
 	}
 }
 
+func (r *inMemoryRepo) Open() error {
+	return nil
+}
+
+func (r *inMemoryRepo) Close() error {
+	return nil
+}
+
 func (r *inMemoryRepo) UpsertIssueType(typeName string, template string) error {
 	r.issueTypes[typeName] = template
 	return nil
