@@ -66,3 +66,7 @@ func (r *inMemoryRepo) InsertIssue(issue *entities.Issue) error {
 	r.issues[issue.ID] = issue.Body
 	return nil
 }
+
+func (r *inMemoryRepo) FindIssue(id string) (*entities.Issue, error) {
+	return nil, nil
+}
