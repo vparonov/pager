@@ -10,5 +10,5 @@ type Repository interface {
 	FindIssueType(typeName string) (string, bool)
 
 	InsertIssue(issue *entities.Issue) error
-	FindIssue(id string) (*entities.Issue, error)
+	FindIssue(id string) (string, bool)
 }

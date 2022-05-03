@@ -85,6 +85,28 @@ func (r *boltRepository) InsertIssue(issue *entities.Issue) error {
 	})
 }
 
-func (r *boltRepository) FindIssue(id string) (*entities.Issue, error) {
-	return nil, nil
+func (r *boltRepository) FindIssue(id string) (string, bool) {
+	var rawissue []byte
+	err := r.db.View(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket([]byte("issue"))
+
+		if bucket == nil {
+			return errors.New("bucket 'issue' not found")
+		}
+
+		// nil byte slice converts to empty string
+		// so there is no need to check for nil here
+		rawissue = bucket.Get([]byte(id))
+		return nil
+	})
+
+	if err != nil {
+		return "", false
+	}
+
+	if rawissue == nil {
+		return "", false
+	}
+
+	return string(rawissue), true
 }
