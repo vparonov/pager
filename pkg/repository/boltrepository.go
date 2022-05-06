@@ -81,11 +81,17 @@ func (r *boltRepository) InsertIssue(issue *entities.Issue) error {
 			return err
 		}
 
-		return bucket.Put([]byte(issue.ID), []byte(issue.Body))
+		marshaledIssue, err := entities.IssueToJson(issue)
+
+		if err != nil {
+			return err
+		}
+
+		return bucket.Put([]byte(issue.ID), marshaledIssue)
 	})
 }
 
-func (r *boltRepository) FindIssue(id string) (string, bool) {
+func (r *boltRepository) FindIssue(id string) (*entities.Issue, bool) {
 	var rawissue []byte
 	err := r.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte("issue"))
@@ -101,12 +107,18 @@ func (r *boltRepository) FindIssue(id string) (string, bool) {
 	})
 
 	if err != nil {
-		return "", false
+		return nil, false
 	}
 
 	if rawissue == nil {
-		return "", false
+		return nil, false
 	}
 
-	return string(rawissue), true
+	issue, err := entities.NewIssueFromJson(rawissue)
+
+	if err != nil {
+		return nil, false
+	}
+
+	return issue, true
 }

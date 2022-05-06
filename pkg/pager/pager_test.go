@@ -63,15 +63,23 @@ func (r *inMemoryRepo) InsertIssue(issue *entities.Issue) error {
 		return fmt.Errorf("duplicated issue id = %s", issue.ID)
 	}
 
-	r.issues[issue.ID] = issue.Body
+	issueBytes, _ := entities.IssueToJson(issue)
+	r.issues[issue.ID] = string(issueBytes)
 	return nil
 }
 
-func (r *inMemoryRepo) FindIssue(id string) (string, bool) {
-	issue, ok := r.issues[id]
+func (r *inMemoryRepo) FindIssue(id string) (*entities.Issue, bool) {
+	issueString, ok := r.issues[id]
 
 	if !ok {
-		return "", false
+		return nil, false
 	}
+
+	issue, err := entities.NewIssueFromJson([]byte(issueString))
+
+	if err != nil {
+		return nil, false
+	}
+
 	return issue, true
 }

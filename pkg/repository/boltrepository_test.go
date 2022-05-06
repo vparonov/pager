@@ -75,10 +75,10 @@ func TestBoltRepositoryInsertIssue(t *testing.T) {
 
 	assert.Nil(t, err)
 
-	body, found := repo.FindIssue("test")
+	foundIssue, found := repo.FindIssue("test")
 
 	assert.Equal(t, true, found)
-	assert.Equal(t, "test body", body)
+	assert.Equal(t, "test body", foundIssue.Body)
 	err = repo.Close()
 
 	assert.Nil(t, err)
