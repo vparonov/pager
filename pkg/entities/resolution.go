@@ -21,6 +21,16 @@ func NewResolutionFromJson(b []byte) (*Resolution, error) {
 	return &newResolution, nil
 }
 
+func NewResolutionsSliceFromJson(b []byte) ([]*Resolution, error) {
+	var newResolutionsSlice []*Resolution
+	err := json.Unmarshal(b, &newResolutionsSlice)
+
+	if err != nil {
+		return nil, err
+	}
+	return newResolutionsSlice, nil
+}
+
 func ResolutionToJson(resolution *Resolution) ([]byte, error) {
 	return json.Marshal(resolution)
 }

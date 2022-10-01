@@ -23,6 +23,25 @@ func TestPager(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.NotEqual(t, 0, len(id))
+
+	issue, found := repo.FindIssue(id)
+
+	assert.Equal(t, true, found)
+	assert.NotNil(t, issue)
+
+	err = p.ClearIssue(id, "vangel@elastecad.com")
+
+	assert.Nil(t, err)
+
+	err = p.ClearIssue(id, "example@elastecad.com")
+
+	assert.Nil(t, err)
+
+	resolutions, err := repo.GetResolutions(id)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(resolutions))
+
 }
 
 type inMemoryRepo struct {
@@ -89,16 +108,28 @@ func (r *inMemoryRepo) FindIssue(id string) (*entities.Issue, bool) {
 func (r *inMemoryRepo) InsertResolution(resolution *entities.Resolution) error {
 	resolutions, err := r.GetResolutions(resolution.IssueID)
 
-	if err!= nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 
-	resolutions = append(resolutions, *resolution)
+	resolutions = append(resolutions, resolution)
 
-	str := entities.
+	jsonBytes, err := entities.ResolutionSliceToJson(resolutions)
+
+	if err != nil {
+		return err
+	}
+
+	r.resolutions[resolution.IssueID] = string(jsonBytes)
+
 	return nil
 }
 
 func (r *inMemoryRepo) GetResolutions(issueID string) ([]*entities.Resolution, error) {
-	return nil, nil
+	resolutions, ok := r.resolutions[issueID]
+
+	if !ok {
+		return nil, nil
+	}
+	return entities.NewResolutionsSliceFromJson([]byte(resolutions))
 }
