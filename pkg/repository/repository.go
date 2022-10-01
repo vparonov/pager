@@ -11,4 +11,7 @@ type Repository interface {
 
 	InsertIssue(issue *entities.Issue) error
 	FindIssue(id string) (*entities.Issue, bool)
+
+	InsertResolution(resolution *entities.Resolution) error
+	GetResolutions(issueID string) ([]*entities.Resolution, error)
 }

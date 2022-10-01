@@ -83,3 +83,11 @@ func (r *inMemoryRepo) FindIssue(id string) (*entities.Issue, bool) {
 
 	return issue, true
 }
+
+func (r *inMemoryRepo) InsertResolution(resolution *entities.Resolution) error {
+	return nil
+}
+
+func (r *inMemoryRepo) GetResolutions(issueID string) ([]*entities.Resolution, error) {
+	return nil, nil
+}

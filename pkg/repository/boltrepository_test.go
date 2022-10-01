@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
 	"time"
@@ -83,4 +84,24 @@ func TestBoltRepositoryInsertIssue(t *testing.T) {
 
 	assert.Nil(t, err)
 
+}
+
+func TestMarshalArray(t *testing.T) {
+	r1 := &entities.Resolution{
+		IssueID: "1",
+		UserID:  "vangel@elastecad.com",
+		Ts:      time.Now(),
+	}
+	r2 := &entities.Resolution{
+		IssueID: "1",
+		UserID:  "vangel@elastecad.com",
+		Ts:      time.Now(),
+	}
+
+	ar := []*entities.Resolution{r1, r2}
+
+	js, err := json.Marshal(ar)
+
+	assert.Nil(t, err)
+	assert.NotEqual(t, js, "")
 }

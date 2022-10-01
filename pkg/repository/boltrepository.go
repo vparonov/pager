@@ -122,3 +122,11 @@ func (r *boltRepository) FindIssue(id string) (*entities.Issue, bool) {
 
 	return issue, true
 }
+
+func (r *boltRepository) InsertResolution(resolution *entities.Resolution) error {
+	return nil
+}
+
+func (r *boltRepository) GetResolutions(issueID string) ([]*entities.Resolution, error) {
+	return nil, nil
+}
