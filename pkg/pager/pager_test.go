@@ -26,14 +26,16 @@ func TestPager(t *testing.T) {
 }
 
 type inMemoryRepo struct {
-	issueTypes map[string]string
-	issues     map[string]string
+	issueTypes  map[string]string
+	issues      map[string]string
+	resolutions map[string]string
 }
 
 func newMemoryRepo() repository.Repository {
 	return &inMemoryRepo{
-		issueTypes: make(map[string]string),
-		issues:     make(map[string]string),
+		issueTypes:  make(map[string]string),
+		issues:      make(map[string]string),
+		resolutions: make(map[string]string),
 	}
 }
 
@@ -85,6 +87,15 @@ func (r *inMemoryRepo) FindIssue(id string) (*entities.Issue, bool) {
 }
 
 func (r *inMemoryRepo) InsertResolution(resolution *entities.Resolution) error {
+	resolutions, err := r.GetResolutions(resolution.IssueID)
+
+	if err!= nil {
+        return err
+    }
+
+	resolutions = append(resolutions, *resolution)
+
+	str := entities.
 	return nil
 }
 

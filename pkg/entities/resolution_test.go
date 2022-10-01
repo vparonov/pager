@@ -27,4 +27,15 @@ func TestNewResolutionFromJSON(t *testing.T) {
 
 	assert.Equal(t, "{\"issue_id\":\"1234\",\"user_id\":\"vangel@elastecad.com\",\"ts\":\"2022-05-02T15:04:05+02:00\"}", jsonStringAfter)
 
+	resolutionsSlice := []*Resolution{resolution, resolution}
+
+	jsonBytesSlice, err := ResolutionSliceToJson(resolutionsSlice)
+
+	assert.Nil(t, err)
+
+	jsonStringSliceAfter := string(jsonBytesSlice)
+
+	assert.Equal(t,
+		"[{\"issue_id\":\"1234\",\"user_id\":\"vangel@elastecad.com\",\"ts\":\"2022-05-02T15:04:05+02:00\"},{\"issue_id\":\"1234\",\"user_id\":\"vangel@elastecad.com\",\"ts\":\"2022-05-02T15:04:05+02:00\"}]",
+		jsonStringSliceAfter)
 }

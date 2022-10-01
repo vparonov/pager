@@ -3,6 +3,7 @@ package pager
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/vparonov/pager/pkg/entities"
@@ -50,7 +51,19 @@ func (p *pager) CreateIssue(typeName string, placeHolderValues map[string]string
 }
 
 func (p *pager) ClearIssue(id string, userID string) error {
-	return nil
+	_, ok := p.repository.FindIssue(id)
+
+	if !ok {
+		return fmt.Errorf("%s issue not found", id)
+	}
+
+	resolution := &entities.Resolution{
+		IssueID: id,
+		UserID:  userID,
+		Ts:      time.Now(),
+	}
+
+	return p.repository.InsertResolution(resolution)
 }
 
 func replacePlaceholders(template string, placeHolderValues map[string]string) string {

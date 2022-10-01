@@ -24,3 +24,7 @@ func NewResolutionFromJson(b []byte) (*Resolution, error) {
 func ResolutionToJson(resolution *Resolution) ([]byte, error) {
 	return json.Marshal(resolution)
 }
+
+func ResolutionSliceToJson(resolutions []*Resolution) ([]byte, error) {
+	return json.Marshal(resolutions)
+}
